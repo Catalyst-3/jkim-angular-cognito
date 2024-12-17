@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY ./package.json /app/package.json
 
-RUN yarn global add @angular/cli
-RUN yarn install
+RUN npm install -g @angular/cli
+RUN npm install
 
 COPY . /app
 
