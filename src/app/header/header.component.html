@@ -1,0 +1,25 @@
+<header>
+  <div>
+    <a routerLink="/">
+      <h1>Catalyst 3 Angular Platform</h1>
+    </a>
+
+    <nav>
+      <ul>
+        <li>
+          <a routerLink="/">Home</a>
+        </li>
+        <!-- @if (user) { -->
+        <li>
+          <a routerLink="/dashboard">Dashboard</a>
+          <!-- <a [routerLink]="['/dashboard', user.userId]", routerLinkActive="selected">Dashboard</a> -->
+        </li>
+        <!-- } -->
+
+        <li>
+          <a routerLink="/admin">Admin</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
