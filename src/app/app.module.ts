@@ -16,3 +16,5 @@
 //   bootstrap: [AppComponent],
 // })
 // export class AppModule {}
+
+// https://docs.amplify.aws/angular/build-a-backend/auth/set-up-auth/

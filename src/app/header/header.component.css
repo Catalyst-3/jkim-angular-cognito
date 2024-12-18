@@ -1,0 +1,36 @@
+div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: auto;
+  text-align: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid black;
+}
+
+h1 {
+  margin: 0;
+}
+
+ul {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+}
+
+a:hover,
+a:active,
+.selected {
+  color: blue;
+}
