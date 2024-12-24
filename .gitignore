@@ -3,7 +3,19 @@ npm-debug.log
 .vscode/*
 .DS_Store
 
+# angular
+dist/
+tmp/
+out-tsc/
+.angular/
+
 # amplify
-.amplify
-amplify_outputs*
-amplifyconfiguration*
+src/aws-exports*
+amplify/
+
+# terraform
+*.tfvars
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+.terraform/
