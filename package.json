@@ -1,13 +1,13 @@
 {
   "name": "catalyst-3-angular-platform",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "npm run update-config && ng build",
-    "watch": "npm run update-config && ng build --watch --configuration development",
-    "test": "ng test",
-    "update-config": "./scripts/update-aws-config.sh"
+    "start": "ng serve --host ${HOST:-0.0.0.0} --port ${PORT:-5173} --configuration=${CONFIGURATION:-development}",
+    "build": "ng build",
+    "build:prod": "ng build --configuration=production",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
   },
   "engines": {
     "node": ">=18.19.1"
@@ -44,6 +44,7 @@
     "aws-cdk": "^2.173.1",
     "aws-cdk-lib": "^2.173.1",
     "constructs": "^10.4.2",
+    "dotenv": "^16.4.7",
     "esbuild": "^0.24.0",
     "jasmine-core": "~5.2.0",
     "karma": "~6.4.0",

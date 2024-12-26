@@ -4,12 +4,16 @@ import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { HeaderComponent } from "./header/header.component";
+import { AmplifyAuthenticatorModule } from "@aws-amplify/ui-angular";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    AmplifyAuthenticatorModule,
+    FormsModule,
     AuthModule.forRoot({
       config: {
         authority:

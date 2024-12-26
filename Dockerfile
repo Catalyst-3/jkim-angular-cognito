@@ -10,4 +10,7 @@ COPY . .
 
 EXPOSE 5173
 
-CMD ["npx", "ng", "serve", "--host", "0.0.0.0"]
+ENV HOST=0.0.0.0
+ENV PORT=5173
+ENV CONFIGURATION=development
+CMD ["npm", "start"]
