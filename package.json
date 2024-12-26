@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "ng serve --host ${HOST:-0.0.0.0} --port ${PORT:-5173} --configuration=${CONFIGURATION:-development}",
-    "build": "ng build",
-    "build:prod": "ng build --configuration=production",
-    "watch": "ng build --watch --configuration development",
+    "set-env": "node scripts/set-env.cjs",
+    "start": "npm run set-env && ng serve --host ${HOST:-0.0.0.0} --port ${PORT:-5173} --configuration=${CONFIGURATION:-development}",
+    "build": "npm run set-env && ng build --configuration=development",
+    "build:prod": "npm run set-env && ng build --configuration=production",
+    "watch": "npm run set-env && ng build --watch --configuration=development",
     "test": "ng test"
   },
   "engines": {
