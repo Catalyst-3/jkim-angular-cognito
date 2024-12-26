@@ -3,6 +3,9 @@ npm-debug.log
 .vscode/*
 .DS_Store
 
+# environment variables
+.env
+
 # angular
 dist/
 tmp/
