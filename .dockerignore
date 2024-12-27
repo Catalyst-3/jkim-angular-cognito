@@ -1,5 +1,4 @@
 node_modules
 dist
 .angular
-.env
 src/aws-exports.js
