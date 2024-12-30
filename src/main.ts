@@ -6,7 +6,6 @@ import outputs from "../amplify_outputs.json";
 import { environment } from "./environments/environment";
 
 console.log("This app is running in environment: ", environment.envName);
-
 console.log("USER POOL ID: ", environment.userPoolId);
 
 try {
