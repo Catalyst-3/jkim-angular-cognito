@@ -1,52 +1,34 @@
-import { Component } from "@angular/core";
-import { Router } from "@angular/router";
+import { Component, OnInit } from "@angular/core";
 import { AmplifyAuthenticatorModule } from "@aws-amplify/ui-angular";
-import { Amplify } from "aws-amplify";
-// import outputs from "../../../../amplify_outputs.json";
-
-// Amplify.configure(outputs);
+import { AuthUser, getCurrentUser, signOut } from "aws-amplify/auth";
 
 @Component({
   selector: "app-home",
   standalone: true,
   imports: [AmplifyAuthenticatorModule],
   templateUrl: "./home.component.html",
+  styleUrl: "./home.component.css",
 })
-export class HomeComponent {
-  title = "homepage";
+export class HomeComponent implements OnInit {
+  username?: string = undefined;
+  email?: string = undefined;
 
-  constructor(private router: Router) {}
-
-  navigateToDashboard() {
-    this.router.navigate(["/dashboard"]);
+  async ngOnInit(): Promise<void> {
+    const user: AuthUser = await getCurrentUser();
+    if (user) {
+      const { username, signInDetails } = user;
+      this.username = username;
+      this.email = signInDetails?.loginId;
+    }
   }
 
-  login() {
-    localStorage.setItem("user", "true"); // Mock login
-    this.router.navigate(["/dashboard"]);
+  async signOut(): Promise<void> {
+    try {
+      await signOut();
+      console.log("User logged out successfully");
+    } catch (e) {
+      console.error("Error logging out:", e);
+      throw e;
+    }
   }
-
-  logout() {
-    localStorage.removeItem("user"); // Mock logout
-    this.router.navigate(["/"]);
-  }
-
-  // constructor() {
-  //   Amplify.configure(awsExports);
-  // }
-
-  // public formFields = {
-  //   signIn: {
-  //     username: {
-  //       placeholder: "Enter your cool email",
-  //     },
-  //   },
-  //   confirmVerifyUser: {
-  //     confirmation_code: {
-  //       label: "New Label",
-  //       placeholder: "Enter your Confirmation Code:",
-  //       isRequired: false,
-  //     },
-  //   },
-  // };
 }
