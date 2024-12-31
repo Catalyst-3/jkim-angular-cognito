@@ -1,1 +1,7 @@
-<p>dashboard works!</p>
+<div class="">
+  <h1>Dashboard</h1>
+  @if (user$ | async; as user) {
+  <p><b>Username: </b>{{ user.username }}</p>
+  <p><b>User Id: </b>{{ user.userId }}</p>
+  }
+</div>
