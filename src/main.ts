@@ -2,11 +2,7 @@ import { Amplify } from "aws-amplify";
 import awsconfig from "./aws-exports";
 import { AppModule } from "./app/app.module";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
-import outputs from "../amplify_outputs.json";
 import { environment } from "./environments/environment";
-
-console.log("This app is running in environment: ", environment.envName);
-console.log("USER POOL ID: ", environment.userPoolId);
 
 try {
   Amplify.configure({
@@ -31,11 +27,10 @@ try {
       },
     },
   });
-
   console.log("Amplify configured successfully:", awsconfig);
-  console.log("outputs:", outputs);
 } catch (e) {
   console.error("Error configuring Amplify:", e);
+  throw e;
 }
 
 platformBrowserDynamic()

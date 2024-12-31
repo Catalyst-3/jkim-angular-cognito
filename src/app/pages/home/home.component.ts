@@ -1,6 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { AmplifyAuthenticatorModule } from "@aws-amplify/ui-angular";
-import { AuthUser, getCurrentUser, signOut } from "aws-amplify/auth";
+import { AuthUser } from "aws-amplify/auth";
+import { AuthService } from "../../auth/auth.service";
+import { Observable } from "rxjs";
 
 @Component({
   selector: "app-home",
@@ -9,26 +11,10 @@ import { AuthUser, getCurrentUser, signOut } from "aws-amplify/auth";
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.css",
 })
-export class HomeComponent implements OnInit {
-  username?: string = undefined;
-  email?: string = undefined;
+export class HomeComponent {
+  user$: Observable<AuthUser | null>;
 
-  async ngOnInit(): Promise<void> {
-    const user: AuthUser = await getCurrentUser();
-    if (user) {
-      const { username, signInDetails } = user;
-      this.username = username;
-      this.email = signInDetails?.loginId;
-    }
-  }
-
-  async signOut(): Promise<void> {
-    try {
-      await signOut();
-      console.log("User logged out successfully");
-    } catch (e) {
-      console.error("Error logging out:", e);
-      throw e;
-    }
+  constructor(public authService: AuthService) {
+    this.user$ = this.authService.user$;
   }
 }

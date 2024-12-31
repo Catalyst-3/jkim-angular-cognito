@@ -9,16 +9,14 @@
         <li>
           <a routerLink="/">Home</a>
         </li>
-        <!-- @if (user) { -->
+        @if (user$ | async; as user) {
         <li>
-          <a routerLink="/dashboard">Dashboard</a>
-          <!-- <a [routerLink]="['/dashboard', user.userId]", routerLinkActive="selected">Dashboard</a> -->
+          <a [routerLink]="['/dashboard', user.userId]">Dashboard</a>
         </li>
-        <!-- } -->
-
         <li>
-          <a routerLink="/admin">Admin</a>
+          <a [routerLink]="['/admin', user.userId]">Admin</a>
         </li>
+        }
       </ul>
     </nav>
   </div>

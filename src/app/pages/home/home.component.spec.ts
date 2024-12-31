@@ -1,23 +1,33 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideHttpClient } from "@angular/common/http";
 import { HomeComponent } from "./home.component";
+import { AuthService } from "../../auth/auth.service";
+import { BehaviorSubject, of } from "rxjs";
+import { AmplifyAuthenticatorModule } from "@aws-amplify/ui-angular";
+import { AuthUser, ConfirmSignInOutput } from "aws-amplify/auth";
 
 // import * as AmplifyAuth from "@aws-amplify/auth";
 
 describe("HomeComponent", () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
-  let mockSignOut: jasmine.Spy;
+  let mockAuthService: jasmine.SpyObj<AuthService>;
+  let userSubject: BehaviorSubject<AuthUser | null>;
 
   beforeEach(async () => {
+    userSubject = new BehaviorSubject<AuthUser | null>(null);
+    mockAuthService = jasmine.createSpyObj("AuthService", ["logout"], {
+      user$: userSubject.asObservable(),
+    });
+
     await TestBed.configureTestingModule({
       imports: [HomeComponent],
       providers: [
-        provideHttpClientTesting(),
-        provideHttpClient(),
-        // { provide: AuthService, useClass: MockAuthService },
+        // provideHttpClientTesting(),
+        // provideHttpClient(),
+        { provide: AuthService, useValue: mockAuthService },
       ],
     }).compileComponents();
   });
@@ -36,7 +46,7 @@ describe("HomeComponent", () => {
     expect(component).toBeTruthy();
   });
 
-  it("should intially show amplify authenticator component and conditional text when the user is not logged in", () => {
+  it("should intially show amplify authenticator component and conditional text when the user is not logged in", waitForAsync(() => {
     const authComponent = fixture.debugElement.query(
       By.css("amplify-authenticator")
     );
@@ -44,10 +54,82 @@ describe("HomeComponent", () => {
     expect(authComponent).toBeTruthy();
 
     fixture.whenStable().then(() => {
+      fixture.detectChanges();
       const h2 = fixture.debugElement.query(By.css("h2")).nativeElement;
       expect(h2.textContent).toContain("Sign in to your account");
     });
-  });
+  }));
+
+  it('should show "Sign in to your account" when user is logged out', waitForAsync(() => {
+    // Emit a null value to simulate the logged-out state
+    userSubject.next(null);
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges(); // Trigger DOM update
+
+      const h2 = fixture.debugElement.query(
+        By.css(".amplify-heading--2")
+      )?.nativeElement;
+      expect(h2.textContent).toContain("Sign in to your account");
+    });
+  }));
+
+  // it("should display the username when the user is logged in", waitForAsync(() => {
+  //   const mockUser = {
+  //     username: "testuser",
+  //     userId: "testuser",
+  //     signInDetails: {
+  //       loginId: "testuser@example.com",
+  //     },
+  //   };
+  //   userSubject.next(mockUser);
+  //   fixture.detectChanges();
+
+  //   fixture.whenStable().then(() => {
+  //     fixture.detectChanges();
+
+  //     const h2 = fixture.debugElement.query(By.css("h2")).nativeElement;
+  //     expect(h2.textContent).toContain("Welcome, testuser!");
+  //   });
+  // }));
+
+  // it("should display the username when user is logged in", waitForAsync(() => {
+  //   fixture.whenStable().then(() => {
+  //     fixture.detectChanges(); // Trigger change detection after async updates
+  //     const welcomeMessage = fixture.debugElement.query(
+  //       By.css("h2")
+  //     )?.nativeElement;
+  //     expect(welcomeMessage.textContent).toContain("Welcome, testuser!");
+  //   });
+  // }));
+
+  // it('should display "Sign in to your account" when user is not logged in', () => {
+  //   // Mock the AuthService to return null for the user
+  //   mockAuthService.user$ = of(null);
+  //   fixture.detectChanges();
+
+  //   const compiled = fixture.nativeElement as HTMLElement;
+  //   const signInHeader = compiled.querySelector(".amplify-heading--2");
+  //   expect(signInHeader?.textContent).toContain("Sign in to your account");
+  // });
+
+  // it('should call logout when the "Sign Out" button is clicked', async () => {
+  //   spyOn(console, "log");
+
+  //   const compiled = fixture.nativeElement as HTMLElement;
+
+  //   // Find and click the "Sign Out" button
+  //   const signOutButton = compiled.querySelector("button");
+  //   expect(signOutButton).toBeTruthy();
+
+  //   signOutButton?.click();
+  //   await fixture.whenStable();
+
+  //   // Assert that logout was called and a log was printed
+  //   expect(mockAuthService.logout).toHaveBeenCalled();
+  //   expect(console.log).toHaveBeenCalledWith("User logged out successfully");
+  // });
 
   // xit("should display the welcome message when the user is logged in", async () => {
   //   const signInOutput: AmplifyAuth.SignInOutput = {
