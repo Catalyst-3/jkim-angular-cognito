@@ -9,11 +9,7 @@ import { AuthUser } from "aws-amplify/auth";
   styleUrl: "./app.component.css",
 })
 export class AppComponent implements OnInit {
-  user$: Observable<AuthUser | null>;
-
-  constructor(private authService: AuthService) {
-    this.user$ = this.authService.user$;
-  }
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
     this.authService.fetchCurrentUser();

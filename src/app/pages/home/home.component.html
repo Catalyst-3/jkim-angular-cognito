@@ -2,16 +2,37 @@
   <h1>Homepage</h1>
   <p>This page can be seen by everyone</p>
 
-  <amplify-authenticator [loginMechanisms]="['email']">
-    <ng-template amplifySlot="sign-in-header">
-      <h2 class="amplify-heading amplify-heading--2">
-        Sign in to your account
-      </h2>
-    </ng-template>
+  <div class="login-form-container" *ngIf="!isLoggedIn; else loggedInTemplate">
+    <h2 class="form-header">Sign in to your account</h2>
+    <form class="form" (ngSubmit)="onLogin()">
+      <div class="form-field">
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="enteredEmail"
+          name="email"
+          required
+          placeholder="Email"
+        />
+      </div>
+      <div class="form-field">
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="enteredPassword"
+          name="password"
+          required
+          placeholder="Password"
+        />
+      </div>
+      <button type="submit">Sign In</button>
+    </form>
+  </div>
 
-    <ng-template amplifySlot="authenticated" let-user="user">
-      <h2>Welcome, {{ user.username }}!</h2>
-      <button (click)="authService.logout()">Sign Out</button>
-    </ng-template>
-  </amplify-authenticator>
+  <ng-template amplifySlot="authenticated" #loggedInTemplate>
+    <h2>Welcome, {{ user?.username }}!</h2>
+    <button (click)="onLogout()">Sign Out</button>
+  </ng-template>
 </div>

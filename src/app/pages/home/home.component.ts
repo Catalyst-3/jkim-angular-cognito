@@ -1,20 +1,43 @@
-import { Component } from "@angular/core";
-import { AmplifyAuthenticatorModule } from "@aws-amplify/ui-angular";
-import { AuthUser } from "aws-amplify/auth";
-import { AuthService } from "../../auth/auth.service";
-import { Observable } from "rxjs";
+import { Component, OnInit } from "@angular/core";
+import { AuthService, CustomUser } from "../../auth/auth.service";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: "app-home",
   standalone: true,
-  imports: [AmplifyAuthenticatorModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.css",
 })
-export class HomeComponent {
-  user$: Observable<AuthUser | null>;
+export class HomeComponent implements OnInit {
+  enteredEmail: string = "";
+  enteredPassword: string = "";
+  user: CustomUser | null = null;
+  isLoggedIn: boolean = false;
 
-  constructor(public authService: AuthService) {
-    this.user$ = this.authService.user$;
+  constructor(private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.authService.user$.subscribe((user) => {
+      this.user = user;
+      this.isLoggedIn = !!user;
+    });
+  }
+
+  async onLogin(): Promise<void> {
+    try {
+      await this.authService.login(this.enteredEmail, this.enteredPassword);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  }
+
+  async onLogout(): Promise<void> {
+    try {
+      await this.authService.logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   }
 }
