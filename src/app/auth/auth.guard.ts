@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { CanActivate, Router } from "@angular/router";
 import { AuthService } from "./auth.service";
+import { map, Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -8,15 +9,17 @@ import { AuthService } from "./auth.service";
 export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
-  async canActivate(): Promise<boolean> {
-    const groups = await this.authService.fetchUserGroups();
-
-    if (groups && groups.includes("admin")) {
-      return true;
-    } else {
-      console.log("Access Denied: Admins Only");
-      this.router.navigate(["/unauthorized"]);
-      return false;
-    }
+  canActivate(): Observable<boolean> {
+    return this.authService.userGroups$.pipe(
+      map((groups) => {
+        if (groups && groups.includes("admins")) {
+          return true;
+        } else {
+          console.log("Access Denied: Admins Only");
+          this.router.navigate(["/unauthorized"]);
+          return false;
+        }
+      })
+    );
   }
 }
