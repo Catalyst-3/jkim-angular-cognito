@@ -13,7 +13,7 @@
           <li>
             <a [routerLink]="['/dashboard', user.userId]">Dashboard</a>
           </li>
-          <ng-container *ngIf="isAdmin$ | async">
+          <ng-container *ngIf="user.isAdmin">
             <li>
               <a [routerLink]="['/admin', user.userId]">Admin</a>
             </li>

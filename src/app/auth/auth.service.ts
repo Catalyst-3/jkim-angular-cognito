@@ -4,6 +4,8 @@ import {
   AuthUser,
   fetchAuthSession,
   getCurrentUser,
+  signIn,
+  SignInInput,
   signOut,
 } from "aws-amplify/auth";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -13,19 +15,25 @@ interface CustomJwtPayload extends JwtPayload {
   "cognito:groups"?: string[];
 }
 
+export interface CustomUser extends AuthUser {
+  isAdmin: boolean;
+}
+
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-  private userSubject = new BehaviorSubject<AuthUser | null>(
+  private userSubject = new BehaviorSubject<CustomUser | null>(
     this.restoreUser()
   );
   private userGroupsSubject = new BehaviorSubject<string[]>([]);
   userGroups: string[] = [];
-  private isAdminSubject = new BehaviorSubject<boolean>(false);
+  private isAdminSubject = new BehaviorSubject<boolean>(
+    this.restoreUser()?.isAdmin ?? false
+  );
   private accessToken: CustomJwtPayload | undefined = undefined;
 
-  get user$(): Observable<AuthUser | null> {
+  get user$(): Observable<CustomUser | null> {
     return this.userSubject.asObservable();
   }
 
@@ -33,20 +41,69 @@ export class AuthService {
     return this.userGroupsSubject.asObservable();
   }
 
-  get isAdmin$(): Observable<boolean> {
-    return this.isAdminSubject.asObservable();
-  }
-
-  private restoreUser(): AuthUser | null {
+  private restoreUser(): CustomUser | null {
     const userJson = localStorage.getItem("currentUser");
     return userJson ? JSON.parse(userJson) : null;
   }
 
-  private saveUser(user: AuthUser | null): void {
+  private saveUser(user: CustomUser | null): void {
     if (user) {
       localStorage.setItem("currentUser", JSON.stringify(user));
     } else {
       localStorage.removeItem("currentUser");
+    }
+  }
+
+  async login(email: string, password: string): Promise<void> {
+    try {
+      const signInInput: SignInInput = {
+        username: email,
+        password,
+      };
+      await signIn(signInInput);
+      await this.fetchCurrentUser();
+    } catch (error) {
+      console.error("Error during sign-in:", error);
+      throw error;
+    }
+  }
+
+  async logout(): Promise<void> {
+    try {
+      await signOut();
+      this.userSubject.next(null);
+      this.saveUser(null);
+      this.userGroupsSubject.next([]);
+      this.isAdminSubject.next(false);
+    } catch (error) {
+      console.error("Error during sign-out:", error);
+      throw error;
+    }
+  }
+
+  async fetchCurrentUser(): Promise<void> {
+    try {
+      const validAuthSession = await this.checkAuthSession();
+
+      if (validAuthSession) {
+        const user: AuthUser = await getCurrentUser();
+        await this.fetchUserGroups();
+
+        const userWithDetails: CustomUser = {
+          ...user,
+          isAdmin: this.isAdminSubject.value,
+        };
+
+        this.userSubject.next(userWithDetails);
+        this.saveUser(userWithDetails);
+      } else {
+        this.userSubject.next(null);
+        this.saveUser(null);
+      }
+    } catch (error) {
+      console.error("Error fetching current user:", error);
+      this.userSubject.next(null);
+      this.saveUser(null);
     }
   }
 
@@ -77,52 +134,6 @@ export class AuthService {
     } catch (error) {
       console.error("Error checking auth session:", error);
       return false;
-    }
-  }
-
-  async fetchCurrentUser(): Promise<void> {
-    try {
-      const validAuthSession = await this.checkAuthSession();
-
-      if (validAuthSession) {
-        const user: AuthUser = await getCurrentUser();
-        this.userSubject.next(user);
-        this.saveUser(user);
-        await this.fetchUserGroups(); // move to login()
-      } else {
-        this.userSubject.next(null);
-        this.saveUser(null);
-        this.userGroupsSubject.next([]);
-      }
-    } catch (error) {
-      console.error("Error fetching current user:", error);
-      this.userSubject.next(null);
-      this.saveUser(null);
-      this.userGroupsSubject.next([]);
-    }
-  }
-
-  // async login(): Promise<void> {
-  //   try {
-  //     await this.fetchCurrentUser();
-  //     await this.fetchUserGroups();
-  //     await this.assignAdminUser();
-  //   } catch (error) {
-  //     console.error("Error during sign-in:", error);
-  //     throw error;
-  //   }
-  // }
-
-  async logout(): Promise<void> {
-    try {
-      await signOut();
-      this.userSubject.next(null);
-      this.saveUser(null);
-      this.userGroupsSubject.next([]);
-      this.isAdminSubject.next(false);
-    } catch (error) {
-      console.error("Error during sign-out:", error);
-      throw error;
     }
   }
 
