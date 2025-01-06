@@ -13,8 +13,11 @@ import { FormsModule } from "@angular/forms";
 export class HomeComponent implements OnInit {
   enteredEmail: string = "";
   enteredPassword: string = "";
+  enteredConfirmPassword: string = "";
   user: CustomUser | null = null;
   isLoggedIn: boolean = false;
+  activeTab: string = "signIn";
+  errorMessage: string = "";
 
   constructor(private authService: AuthService) {}
 
@@ -25,19 +28,35 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
+    this.errorMessage = "";
+  }
+
   async onLogin(): Promise<void> {
     try {
       await this.authService.login(this.enteredEmail, this.enteredPassword);
     } catch (error) {
-      console.error("Login failed:", error);
+      this.errorMessage = "Login failed. Please try again.";
+    }
+  }
+
+  async onSignUp(): Promise<void> {
+    if (this.enteredPassword !== this.enteredConfirmPassword) {
+      this.errorMessage = "Passwords do not match";
+      return;
+    }
+
+    try {
+      await this.authService.signUp(this.enteredEmail, this.enteredPassword);
+      this.errorMessage = "";
+      this.setActiveTab("signIn");
+    } catch (error) {
+      this.errorMessage = "Sign up failed. Please try again.";
     }
   }
 
   async onLogout(): Promise<void> {
-    try {
-      await this.authService.logout();
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
+    await this.authService.logout();
   }
 }

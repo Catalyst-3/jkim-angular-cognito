@@ -7,6 +7,7 @@ import {
   signIn,
   SignInInput,
   signOut,
+  signUp,
 } from "aws-amplify/auth";
 import { BehaviorSubject, Observable } from "rxjs";
 import { jwtDecode, JwtPayload } from "jwt-decode";
@@ -64,6 +65,21 @@ export class AuthService {
       await this.fetchCurrentUser();
     } catch (error) {
       console.error("Error during sign-in:", error);
+      throw error;
+    }
+  }
+
+  async signUp(email: string, password: string): Promise<void> {
+    try {
+      const { isSignUpComplete, userId, nextStep } = await signUp({
+        username: email,
+        password,
+      });
+
+      await this.login(email, password);
+      await this.fetchCurrentUser();
+    } catch (error) {
+      console.error("Error during sign-up:", error);
       throw error;
     }
   }
