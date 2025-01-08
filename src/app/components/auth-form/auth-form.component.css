@@ -58,9 +58,13 @@
 }
 
 .form-footer {
-  margin: 0 1rem;
+  margin: 1rem;
 }
 
 .error-message {
   color: red;
+}
+
+.info-message {
+  color: #00bfff;
 }

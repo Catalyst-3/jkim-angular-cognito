@@ -2,10 +2,13 @@ import { Injectable } from "@angular/core";
 import {
   AuthSession,
   AuthUser,
+  confirmResetPassword,
   confirmSignUp,
   ConfirmSignUpOutput,
   fetchAuthSession,
   getCurrentUser,
+  resetPassword,
+  ResetPasswordOutput,
   signIn,
   SignInInput,
   signOut,
@@ -112,7 +115,33 @@ export class AuthService {
     }
   }
 
-  // async resetPassword(): Promise<void> {}
+  async resetPassword(email: string): Promise<ResetPasswordOutput> {
+    try {
+      return await resetPassword({
+        username: email,
+      });
+    } catch (error) {
+      console.error("Error during password reset:", error);
+      throw error;
+    }
+  }
+
+  async confirmResetPassword(
+    email: string,
+    confirmationCode: string,
+    newPassword: string
+  ): Promise<void> {
+    try {
+      await confirmResetPassword({
+        username: email,
+        confirmationCode,
+        newPassword,
+      });
+    } catch (error) {
+      console.error("Error during password reset confirmation:", error);
+      throw error;
+    }
+  }
 
   async fetchCurrentUser(): Promise<void> {
     try {
