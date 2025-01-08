@@ -16,8 +16,8 @@
     </button>
   </div>
 
-  <div *ngIf="activeTab === 'signIn'">
-    <h2 class="form-header">Sign in to your account</h2>
+  <div class="form-body" *ngIf="activeTab === 'signIn'">
+    <h2 class="form-title">Sign in to your account</h2>
     <form class="form" (ngSubmit)="onLogin()" #loginForm="ngForm">
       <div class="form-field">
         <label for="email">Email:</label>
@@ -54,9 +54,14 @@
     </form>
   </div>
 
-  <div *ngIf="activeTab === 'createAccount'">
-    <h2 class="form-header">Create a new account</h2>
-    <form class="form" (ngSubmit)="onSignUp()" #signUpForm="ngForm">
+  <div class="form-body" *ngIf="activeTab === 'createAccount'">
+    <h2 class="form-title">Create a new account</h2>
+    <form
+      class="form"
+      (ngSubmit)="onSignUp()"
+      *ngIf="!isSignUpCodeSent"
+      #signUpForm="ngForm"
+    >
       <div class="form-field">
         <label for="email">Email:</label>
         <input
@@ -106,6 +111,28 @@
       <button type="submit" [disabled]="signUpForm.invalid">
         Create Account
       </button>
+    </form>
+
+    <form
+      class="form"
+      (ngSubmit)="onConfirmSignup()"
+      *ngIf="isSignUpCodeSent && !isSignUpComplete"
+      #confirmCodeForm="ngForm"
+    >
+      <p>Please enter the confirmation code sent to {{ this.enteredEmail }}</p>
+      <div class="form-field">
+        <label for="confirmationCode">Confirmation Code:</label>
+        <input
+          type="string"
+          id="confirmationCode"
+          [(ngModel)]="confirmationCode"
+          name="confirmationCode"
+          required
+          placeholder="Confirmation Code"
+          #confirmationCodeInput="ngModel"
+        />
+      </div>
+      <button type="submit" [disabled]="confirmCodeForm.invalid">Submit</button>
     </form>
   </div>
 
