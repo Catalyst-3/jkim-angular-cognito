@@ -27,9 +27,15 @@
   }
 }
 
-.form-header {
+.form-title {
   font-size: 24px;
   margin: 0 0 1rem 0;
+}
+
+.form-body {
+  width: 100%;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .form {

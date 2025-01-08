@@ -19,7 +19,10 @@ export class AuthFormComponent {
 
   confirmationCode: string = "";
   newPassword: string = "";
-  isCodeSent: boolean = false;
+  isSignUpCodeSent: boolean = false;
+  isSignUpComplete: boolean = false;
+
+  isResetPasswordCodeSent: boolean = false;
   isPasswordReset: boolean = false;
 
   constructor(private authService: AuthService) {}
@@ -27,7 +30,10 @@ export class AuthFormComponent {
   setActiveTab(tab: string): void {
     this.activeTab = tab;
     this.errorMessage = "";
-    this.isCodeSent = false;
+    this.isSignUpCodeSent = false;
+    this.isSignUpComplete = false;
+
+    this.isResetPasswordCodeSent = false;
     this.isPasswordReset = false;
   }
 
@@ -50,12 +56,35 @@ export class AuthFormComponent {
     }
 
     try {
-      await this.authService.signUp(this.enteredEmail, this.enteredPassword);
-      this.errorMessage = "";
-      this.setActiveTab("signIn");
+      const { isSignUpComplete } = await this.authService.signUp(
+        this.enteredEmail,
+        this.enteredPassword
+      );
+
+      this.isSignUpCodeSent = true;
+      this.isSignUpComplete = isSignUpComplete;
     } catch (error) {
       if (error instanceof Error) {
         this.errorMessage = "Sign up failed. " + error.message;
+      } else {
+        this.errorMessage = "An unknown error occurred.";
+      }
+    }
+  }
+
+  async onConfirmSignup(): Promise<void> {
+    try {
+      const { isSignUpComplete } = await this.authService.confirmSignUp(
+        this.enteredEmail,
+        this.confirmationCode
+      );
+
+      this.isSignUpComplete = isSignUpComplete;
+      this.setActiveTab("signIn");
+      await this.authService.login(this.enteredEmail, this.enteredPassword);
+    } catch (error) {
+      if (error instanceof Error) {
+        this.errorMessage = "Failed to confirm the code. " + error.message;
       } else {
         this.errorMessage = "An unknown error occurred.";
       }

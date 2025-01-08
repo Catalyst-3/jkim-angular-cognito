@@ -69,12 +69,12 @@ describe("AuthFormComponent", () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector("h2.form-header").textContent).toContain(
+    expect(compiled.querySelector("h2.form-title").textContent).toContain(
       "Create a new account"
     );
   });
 
-  it("should call signUp method on form submit and switch to signIn tab on success", async () => {
+  it("should call signUp method on form submit", async () => {
     component.setActiveTab("createAccount");
     fixture.detectChanges();
 
@@ -92,7 +92,6 @@ describe("AuthFormComponent", () => {
       "test@example.com",
       "password"
     );
-    expect(component.activeTab).toBe("signIn");
   });
 
   it("should display error message if passwords do not match", () => {

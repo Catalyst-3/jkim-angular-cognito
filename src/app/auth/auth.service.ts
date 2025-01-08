@@ -2,12 +2,15 @@ import { Injectable } from "@angular/core";
 import {
   AuthSession,
   AuthUser,
+  confirmSignUp,
+  ConfirmSignUpOutput,
   fetchAuthSession,
   getCurrentUser,
   signIn,
   SignInInput,
   signOut,
   signUp,
+  SignUpOutput,
 } from "aws-amplify/auth";
 import { BehaviorSubject, Observable } from "rxjs";
 import { jwtDecode, JwtPayload } from "jwt-decode";
@@ -69,17 +72,29 @@ export class AuthService {
     }
   }
 
-  async signUp(email: string, password: string): Promise<void> {
+  async signUp(email: string, password: string): Promise<SignUpOutput> {
     try {
-      const { isSignUpComplete, userId, nextStep } = await signUp({
+      return await signUp({
         username: email,
         password,
       });
-
-      await this.login(email, password);
-      await this.fetchCurrentUser();
     } catch (error) {
       console.error("Error during sign-up:", error);
+      throw error;
+    }
+  }
+
+  async confirmSignUp(
+    email: string,
+    confirmationCode: string
+  ): Promise<ConfirmSignUpOutput> {
+    try {
+      return await confirmSignUp({
+        username: email,
+        confirmationCode,
+      });
+    } catch (error) {
+      console.error("Error during sign-up confirmation:", error);
       throw error;
     }
   }
@@ -96,6 +111,8 @@ export class AuthService {
       throw error;
     }
   }
+
+  // async resetPassword(): Promise<void> {}
 
   async fetchCurrentUser(): Promise<void> {
     try {

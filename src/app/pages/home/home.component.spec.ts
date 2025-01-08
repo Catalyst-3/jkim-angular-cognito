@@ -37,7 +37,7 @@ describe("HomeComponent", () => {
 
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector("form")).toBeTruthy();
-    expect(compiled.querySelector("h2.form-header").textContent).toContain(
+    expect(compiled.querySelector("h2.form-title").textContent).toContain(
       "Sign in to your account"
     );
   });
