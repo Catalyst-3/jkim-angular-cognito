@@ -52,6 +52,86 @@
       </div>
       <button type="submit" [disabled]="loginForm.invalid">Sign In</button>
     </form>
+    <a class="form-link" (click)="setActiveTab('forgotPassword')"
+      >Forgot Password?
+    </a>
+  </div>
+
+  <div class="form-body" *ngIf="activeTab === 'forgotPassword'">
+    <h2 class="form-title">Forgot your password?</h2>
+    <form
+      class="form"
+      (ngSubmit)="onResetPassword()"
+      *ngIf="!isResetPasswordCodeSent && !isPasswordReset"
+      #forgotPasswordForm="ngForm"
+    >
+      <div class="form-field">
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="enteredEmail"
+          name="email"
+          required
+          email
+          placeholder="Email"
+          #forgotPasswordEmailInput="ngModel"
+        />
+        <div
+          *ngIf="
+            forgotPasswordEmailInput.invalid && forgotPasswordEmailInput.touched
+          "
+          class="error-message"
+        >
+          <div *ngIf="forgotPasswordEmailInput.errors?.['required']">
+            Email is required.
+          </div>
+          <div *ngIf="forgotPasswordEmailInput.errors?.['email']">
+            Invalid email format.
+          </div>
+        </div>
+      </div>
+      <button type="submit" [disabled]="forgotPasswordForm.invalid">
+        Send Code
+      </button>
+    </form>
+
+    <form
+      class="form"
+      (ngSubmit)="onConfirmResetPassword()"
+      *ngIf="isResetPasswordCodeSent && !isPasswordReset"
+      #resetPasswordForm="ngForm"
+    >
+      <p>Confirmation code sent to {{ this.enteredEmail }}</p>
+      <div class="form-field">
+        <label for="resetPasswordCode">Confirmation Code:</label>
+        <input
+          type="text"
+          id="resetPasswordCode"
+          [(ngModel)]="resetPasswordCode"
+          name="resetPasswordCode"
+          required
+          placeholder="Confirmation Code"
+          #confirmationCodeInput="ngModel"
+        />
+      </div>
+      <div class="form-field">
+        <label for="newPassword">New Password:</label>
+        <input
+          type="password"
+          id="newPassword"
+          [(ngModel)]="newPassword"
+          name="newPassword"
+          required
+          placeholder="New Password"
+          #newPasswordInput="ngModel"
+        />
+      </div>
+      <button type="submit" [disabled]="resetPasswordForm.invalid">
+        Reset Password
+      </button>
+    </form>
+    <a class="form-link" (click)="setActiveTab('signIn')">Back to Sign In</a>
   </div>
 
   <div class="form-body" *ngIf="activeTab === 'createAccount'">
@@ -119,14 +199,16 @@
       *ngIf="isSignUpCodeSent && !isSignUpComplete"
       #confirmCodeForm="ngForm"
     >
-      <p>Please enter the confirmation code sent to {{ this.enteredEmail }}</p>
+      <p class="m-0">
+        Please enter the confirmation code sent to {{ this.enteredEmail }}
+      </p>
       <div class="form-field">
-        <label for="confirmationCode">Confirmation Code:</label>
+        <label for="signUpCode">Confirmation Code:</label>
         <input
           type="string"
-          id="confirmationCode"
-          [(ngModel)]="confirmationCode"
-          name="confirmationCode"
+          id="signUpCode"
+          [(ngModel)]="signUpCode"
+          name="signUpCode"
           required
           placeholder="Confirmation Code"
           #confirmationCodeInput="ngModel"
@@ -139,6 +221,9 @@
   <div class="form-footer">
     <div *ngIf="errorMessage" class="error-message">
       {{ errorMessage }}
+    </div>
+    <div *ngIf="infoMessage" class="info-message">
+      {{ infoMessage }}
     </div>
   </div>
 </div>

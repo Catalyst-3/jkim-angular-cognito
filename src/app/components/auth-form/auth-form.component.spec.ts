@@ -13,9 +13,13 @@ describe("AuthFormComponent", () => {
 
   beforeEach(async () => {
     userSubject = new BehaviorSubject<CustomUser | null>(null);
-    mockAuthService = jasmine.createSpyObj("AuthService", ["login", "signUp"], {
-      user$: userSubject.asObservable(),
-    });
+    mockAuthService = jasmine.createSpyObj(
+      "AuthService",
+      ["login", "signUp", "resetPassword", "confirmResetPassword"],
+      {
+        user$: userSubject.asObservable(),
+      }
+    );
 
     await TestBed.configureTestingModule({
       imports: [AuthFormComponent, CommonModule, FormsModule],
@@ -119,6 +123,67 @@ describe("AuthFormComponent", () => {
     component.enteredEmail = "test@example.com";
     component.enteredPassword = "password";
     component.enteredConfirmPassword = "password";
+
+    const compiled = fixture.nativeElement;
+    const form = compiled.querySelector("form");
+    form.dispatchEvent(new Event("submit"));
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(component.errorMessage).toBeTruthy();
+    expect(compiled.querySelector(".error-message").textContent).toBeTruthy();
+  });
+
+  it("should call resetPassword method on form submit and show confirmation code form", async () => {
+    component.setActiveTab("forgotPassword");
+    fixture.detectChanges();
+
+    component.enteredEmail = "test@example.com";
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement;
+    const form = compiled.querySelector("form");
+    form.dispatchEvent(new Event("submit"));
+
+    await fixture.whenStable();
+    expect(mockAuthService.resetPassword).toHaveBeenCalledWith(
+      "test@example.com"
+    );
+    expect(component.isResetPasswordCodeSent).toBeTrue();
+  });
+
+  it("should display error message on reset password failure", async () => {
+    mockAuthService.resetPassword.and.returnValue(
+      Promise.reject(new Error("Reset password failed"))
+    );
+    component.setActiveTab("forgotPassword");
+    fixture.detectChanges();
+
+    component.enteredEmail = "test@example.com";
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement;
+    const form = compiled.querySelector("form");
+    form.dispatchEvent(new Event("submit"));
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(component.errorMessage).toBeTruthy();
+    expect(compiled.querySelector(".error-message").textContent).toBeTruthy();
+  });
+
+  it("should display error message on confirm reset password failure", async () => {
+    mockAuthService.confirmResetPassword.and.returnValue(
+      Promise.reject(new Error("Confirm reset password failed"))
+    );
+    component.setActiveTab("forgotPassword");
+    component.isResetPasswordCodeSent = true;
+    fixture.detectChanges();
+
+    component.enteredEmail = "test@example.com";
+    component.resetPasswordCode = "123456";
+    component.newPassword = "newpassword";
+    fixture.detectChanges();
 
     const compiled = fixture.nativeElement;
     const form = compiled.querySelector("form");
