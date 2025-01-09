@@ -4,10 +4,21 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Requirements
 
-Angular 18.2.10
-Node 18.19.1+
+Angular 18.2.10,
+Node 18.19.1+,
+AWS CLI
 
-Create an `.env` file in the root directory with your cognito user pool ids
+## First-time build
+Login with the aws-cli and run the following terraform commmands:
+```
+cd terraform
+terraform init
+terraform validate
+terraform apply
+terraform output
+```
+
+Create a `.env` file in the root directory with your cognito user pool ids which you can retrieve by applying the Terraform
 
 ```
 USER_POOL_ID=<USER_POOL_ID>
