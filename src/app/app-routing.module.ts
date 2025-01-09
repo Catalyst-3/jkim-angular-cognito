@@ -3,23 +3,24 @@ import { RouterModule, Routes } from "@angular/router";
 import { HomeComponent } from "./pages/home/home.component";
 import { DashboardComponent } from "./pages/dashboard/dashboard.component";
 import { AdminComponent } from "./pages/admin/admin.component";
-import { AuthGuard } from "./auth/auth.guard";
+import { AuthGuard, AuthAdminGuard } from "./auth/auth.guard";
+import { UnauthorizedComponent } from "./pages/unauthorized/unauthorized.component";
 
 const routes: Routes = [
   { path: "", component: HomeComponent },
   {
     path: "dashboard/:userId",
     component: DashboardComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: "admin/:userId",
     component: AdminComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AuthAdminGuard],
   },
-  // Wildcard route to redirect unknown paths to homepage
   {
     path: "**",
-    redirectTo: "",
+    component: UnauthorizedComponent,
   },
 ];
 
