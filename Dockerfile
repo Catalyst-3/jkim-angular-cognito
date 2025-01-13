@@ -20,4 +20,5 @@ ENV HOST=0.0.0.0
 ENV PORT=5173
 ENV CONFIGURATION=development
 
-CMD ["npm", "build", "npm", "start"]
+RUN npm build
+CMD ["npm", "start"]
