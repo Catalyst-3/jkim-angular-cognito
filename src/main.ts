@@ -1,5 +1,4 @@
 import { Amplify } from "aws-amplify";
-import awsconfig from "./aws-exports";
 import { AppModule } from "./app/app.module";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { environment } from "./environments/environment";
@@ -27,7 +26,6 @@ try {
       },
     },
   });
-  console.log("Amplify configured successfully:", awsconfig);
 } catch (e) {
   console.error("Error configuring Amplify:", e);
   throw e;
