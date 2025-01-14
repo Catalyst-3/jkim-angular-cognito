@@ -19,23 +19,19 @@ USER_POOL_ID=<USER_POOL_ID>
 USER_POOL_CLIENT_ID=<USER_POOL_CLIENT_ID>
 ```
 
-2. **Build**
-
-```sh
-docker-compose build
-```
-
-3. **Start the development server**
+2. **Start the development server**
 
 ```sh
 docker-compose up
 ```
 
+- This command will build and start the application in the development environment.
 - Navigate to `http://localhost:5173/`. The application will automatically reload if you change any of the source files.
 
 ### Notes
 
 - The `scripts/set-env.cjs` script sets up your environment variables from `.env` when starting up the development server. After running `docker-compose up`, verify that the `environments.ts` file has been generated inside `src/environments` and is being loaded into `src/main.ts`.
+- Run `docker-compose down` when you are finished with the development server to ensure a clean environment.
 
 ## Running Unit Tests
 

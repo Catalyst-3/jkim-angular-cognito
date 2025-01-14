@@ -2,7 +2,13 @@ services:
   angular-platform:
     build:
       context: .
+      dockerfile: Dockerfile
     ports:
       - "5173:5173"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=5173
+      - CONFIGURATION=development
     volumes:
       - ./src:/app/src
+    command: npm start
