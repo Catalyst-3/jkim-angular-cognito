@@ -47,12 +47,15 @@ describe("HomeComponent", () => {
       username: "testuser",
       userId: "test-user-id",
       isAdmin: false,
+      signInDetails: {
+        loginId: "testuser@test.com",
+      },
     } as CustomUser);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector("h2").textContent).toContain(
-      "Welcome, testuser!"
+      "Welcome, testuser@test.com!"
     );
     expect(compiled.querySelector("button").textContent).toContain("Sign Out");
   });
