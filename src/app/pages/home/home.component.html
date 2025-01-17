@@ -5,7 +5,7 @@
   <app-auth-form *ngIf="!isLoggedIn; else loggedInTemplate" />
 
   <ng-template amplifySlot="authenticated" #loggedInTemplate>
-    <h2>Welcome, {{ user?.username }}!</h2>
+    <h2>Welcome, {{ userEmail }}!</h2>
     <button (click)="onLogout()">Sign Out</button>
   </ng-template>
 </div>

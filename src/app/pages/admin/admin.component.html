@@ -1,7 +1,6 @@
 <div>
   <h1>Admin Page</h1>
   <ng-container *ngIf="user$ | async as user">
-    <p><b>Username: </b>{{ user.username }}</p>
-    <p><b>User Id: </b>{{ user.userId }}</p>
+    <p><b>Admin User Email: </b>{{ userEmail }}</p>
   </ng-container>
 </div>

@@ -13,6 +13,7 @@ import { AuthFormComponent } from "../../components/auth-form/auth-form.componen
 export class HomeComponent implements OnInit {
   user: CustomUser | null = null;
   isLoggedIn: boolean = false;
+  userEmail: string | undefined;
 
   constructor(private authService: AuthService) {}
 
@@ -20,6 +21,7 @@ export class HomeComponent implements OnInit {
     this.authService.user$.subscribe((user) => {
       this.user = user;
       this.isLoggedIn = !!user;
+      this.userEmail = user?.signInDetails?.loginId;
     });
   }
 

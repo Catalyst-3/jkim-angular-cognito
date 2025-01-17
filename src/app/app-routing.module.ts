@@ -9,12 +9,12 @@ import { UnauthorizedComponent } from "./pages/unauthorized/unauthorized.compone
 const routes: Routes = [
   { path: "", component: HomeComponent },
   {
-    path: "dashboard/:userId",
+    path: "dashboard",
     component: DashboardComponent,
     canActivate: [AuthGuard],
   },
   {
-    path: "admin/:userId",
+    path: "admin",
     component: AdminComponent,
     canActivate: [AuthGuard, AuthAdminGuard],
   },
