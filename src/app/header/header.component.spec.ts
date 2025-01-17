@@ -36,10 +36,8 @@ describe("HeaderComponent", () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement;
-    expect(
-      compiled.querySelector('a[href="/dashboard/test-user-id"]')
-    ).toBeFalsy();
-    expect(compiled.querySelector('a[href="/admin/test-user-id"]')).toBeFalsy();
+    expect(compiled.querySelector('a[href="/dashboard"]')).toBeFalsy();
+    expect(compiled.querySelector('a[href="/admin"]')).toBeFalsy();
   });
 
   it("should display Dashboard link when user is logged in", () => {
@@ -51,9 +49,7 @@ describe("HeaderComponent", () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement;
-    expect(
-      compiled.querySelector('a[href="/dashboard/test-user-id"]')
-    ).toBeTruthy();
+    expect(compiled.querySelector('a[href="/dashboard"]')).toBeTruthy();
   });
 
   it("should not display Admin link when user is logged in and not an admin", () => {
@@ -65,7 +61,7 @@ describe("HeaderComponent", () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('a[href="/admin/test-user-id"]')).toBeFalsy();
+    expect(compiled.querySelector('a[href="/admin"]')).toBeFalsy();
   });
 
   it("should display Admin link when user is logged in and is an admin", () => {
@@ -77,8 +73,6 @@ describe("HeaderComponent", () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement;
-    expect(
-      compiled.querySelector('a[href="/admin/test-user-id"]')
-    ).toBeTruthy();
+    expect(compiled.querySelector('a[href="/admin"]')).toBeTruthy();
   });
 });

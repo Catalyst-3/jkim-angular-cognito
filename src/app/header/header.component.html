@@ -11,11 +11,11 @@
         </li>
         <ng-container *ngIf="user$ | async as user">
           <li>
-            <a [routerLink]="['/dashboard', user.userId]">Dashboard</a>
+            <a [routerLink]="['/dashboard']">Dashboard</a>
           </li>
           <ng-container *ngIf="user.isAdmin">
             <li>
-              <a [routerLink]="['/admin', user.userId]">Admin</a>
+              <a [routerLink]="['/admin']">Admin</a>
             </li>
           </ng-container>
         </ng-container>

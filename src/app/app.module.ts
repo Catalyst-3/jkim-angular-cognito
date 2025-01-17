@@ -6,6 +6,7 @@ import { AppComponent } from "./app.component";
 import { HeaderComponent } from "./header/header.component";
 import { AmplifyAuthenticatorModule } from "@aws-amplify/ui-angular";
 import { FormsModule } from "@angular/forms";
+import { environment } from "../environments/environment";
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
@@ -16,10 +17,9 @@ import { FormsModule } from "@angular/forms";
     FormsModule,
     AuthModule.forRoot({
       config: {
-        authority:
-          "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_CxTHttVIX",
+        authority: `https://cognito-idp.us-east-2.amazonaws.com/${environment.userPoolId}`,
         redirectUrl: "http://localhost:5173",
-        clientId: "2t9t55m36s285fj2aldi13p1gd",
+        clientId: environment.userPoolClientId,
         scope: "email openid",
         responseType: "code",
       },

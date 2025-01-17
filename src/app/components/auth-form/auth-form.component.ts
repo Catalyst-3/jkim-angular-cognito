@@ -46,6 +46,7 @@ export class AuthFormComponent {
   async onLogin(): Promise<void> {
     try {
       await this.authService.login(this.enteredEmail, this.enteredPassword);
+      this.errorMessage = "";
     } catch (error) {
       if (error instanceof Error) {
         this.errorMessage = "Login failed. " + error.message;
@@ -65,6 +66,7 @@ export class AuthFormComponent {
       await this.authService.signUp(this.enteredEmail, this.enteredPassword);
 
       this.isSignUpCodeSent = true;
+      this.errorMessage = "";
     } catch (error) {
       if (error instanceof Error) {
         this.errorMessage = "Sign up failed. " + error.message;
@@ -79,6 +81,7 @@ export class AuthFormComponent {
       await this.authService.confirmSignUp(this.enteredEmail, this.signUpCode);
       this.setActiveTab("signIn");
       await this.authService.login(this.enteredEmail, this.enteredPassword);
+      this.errorMessage = "";
     } catch (error) {
       if (error instanceof Error) {
         this.errorMessage = "Failed to confirm the code. " + error.message;
@@ -92,11 +95,11 @@ export class AuthFormComponent {
     try {
       await this.authService.resetPassword(this.enteredEmail);
       this.isResetPasswordCodeSent = true;
+      this.errorMessage = "";
     } catch (error) {
       this.isResetPasswordCodeSent = false;
       if (error instanceof Error) {
-        this.errorMessage =
-          "Failed to send password reset email. " + error.message;
+        this.errorMessage = "Failed to send password reset email.";
       } else {
         this.errorMessage = "An unknown error occurred.";
       }
@@ -115,7 +118,7 @@ export class AuthFormComponent {
       this.infoMessage = "Password reset successfully. Please log in.";
     } catch (error) {
       if (error instanceof Error) {
-        this.errorMessage = "Failed to reset the password. " + error.message;
+        this.errorMessage = "Failed to reset the password.";
       } else {
         this.errorMessage = "An unknown error occurred.";
       }

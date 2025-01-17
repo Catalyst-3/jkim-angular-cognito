@@ -59,6 +59,12 @@ This folder contains Terraform configuration files to set up AWS Cognito resourc
 - `pool-id`: The ID of the created Cognito user pool.
 - `client-id`: The ID of the created Cognito user pool client.
 
+## Test Users
+
+When running locally, you sign-in to the application using the username & password for the users in `terraform/users.tf`.
+
+Check the `resource "aws_cognito_user_in_group" "in-admin"` to view the user(s) with the "admin" role/permission.
+
 ## Notes
 
 - Ensure that your AWS CLI is configured with the necessary permissions to create Cognito resources.
